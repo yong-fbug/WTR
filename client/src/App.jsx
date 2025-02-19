@@ -45,7 +45,7 @@ function App() {
       <main style={{ display: "flex", height: "100vh" }}>
         {/* Sidebar */}
         <Box
-          sx={{
+          sx={{ 
             width: isSidebarOpen ? "250px" : "60px",
             height: "100vh",
             position: "fixed",
@@ -94,7 +94,7 @@ function App() {
 
           {/* User Account & Logout */}
           {isSidebarOpen && (
-            <Box>
+            <Box sx={{ marginBottom: 5}}>
               <Divider sx={{ marginBottom: 2 }} />
               <List>
                 <ListItem>
@@ -102,7 +102,7 @@ function App() {
                   <ListItemText primary="User Account" />
                 </ListItem>
                 <ListItem>
-                  <Button variant="contained" color="secondary" fullWidth startIcon={<LogoutIcon />}>
+                  <Button variant="contained" fullWidth startIcon={<LogoutIcon />} className="bg-black" >
                     Logout
                   </Button>
                 </ListItem>
