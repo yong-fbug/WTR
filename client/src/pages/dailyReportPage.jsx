@@ -87,7 +87,22 @@ export default function TicketReport() {
   }, {});
   
   const amPmChartData = Object.entries(amPmData).map(([name, value]) => ({ name, value }));
-  
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  {/* Find All Techs with Pending Tickets */}
+const pendingTechData = Object.entries(
+  filteredTickets
+    .filter((t) => t.Status === "Open") // Only Pending (Open) tickets
+    .reduce((acc, t) => {
+      acc[t["Assigned Tech Support"]] = (acc[t["Assigned Tech Support"]] || 0) + 1;
+      return acc;
+    }, {})
+).map(([tech, count]) => ({ tech, count }));
+
+
 
   return (
     <Container maxWidth="lg">
@@ -140,51 +155,53 @@ export default function TicketReport() {
 
       {/* Summary */}
       {/* Summary Report */}
-      <Box sx={{ display: "flex", gap: 2, justifyContent: "space-between", mt: 4 }}>
-        <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
-          <CardContent>
-            <Typography variant="h6">Total Tickets</Typography>
-            <Typography variant="h4">{totalTickets}</Typography>
-          </CardContent>
-        </Card>
+      {/* Summary Report */}
+<Box sx={{ display: "flex", gap: 2, justifyContent: "space-between", mt: 4 }}>
+  <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
+    <CardContent>
+      <Typography variant="h6">Total Tickets</Typography>
+      <Typography variant="h4">{totalTickets}</Typography>
+    </CardContent>
+  </Card>
 
-        <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
-          <CardContent>
-            <Typography variant="h6">Pending Tickets</Typography>
-            <Typography variant="h4">{ticketStatusData.find(t => t.name === "Pending")?.value || 0}</Typography>
-          </CardContent>
-        </Card>
+  <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
+    <CardContent>
+      <Typography variant="h6">Pending Tickets</Typography>
+      <Typography variant="h4">{ticketStatusData.find(t => t.name === "Open")?.value || 0}</Typography>
+    </CardContent>
+  </Card>
 
-        <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
-          <CardContent>
-            <Typography variant="h6">Resolved Tickets</Typography>
-            <Typography variant="h4">{ticketStatusData.find(t => t.name === "Resolved")?.value || 0}</Typography>
-          </CardContent>
-        </Card>
+  <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
+    <CardContent>
+      <Typography variant="h6">Resolved Tickets</Typography>
+      <Typography variant="h4">{ticketStatusData.find(t => t.name === "Closed")?.value || 0}</Typography>
+    </CardContent>
+  </Card>
 
-        <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
-          <CardContent>
-            <Typography variant="h6">Most Active Tech</Typography>
-            <Typography variant="h4">
-              {ticketTechData.length > 0 ? ticketTechData.reduce((max, t) => (t.value > max.value ? t : max), ticketTechData[0]).name : "N/A"}
-            </Typography>
-          </CardContent>
-        </Card>
+  <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
+    <CardContent>
+      <Typography variant="h6">Most Active Tech</Typography>
+      <Typography variant="h4">
+        {ticketTechData.length > 0 ? ticketTechData.reduce((max, t) => (t.value > max.value ? t : max), ticketTechData[0]).name : "N/A"}
+      </Typography>
+    </CardContent>
+  </Card>
 
-        <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
-          <CardContent>
-            <Typography variant="h6">Most Common Category</Typography>
-            <Typography variant="h4">
-              {filteredTickets.length > 0
-                ? Object.entries(filteredTickets.reduce((acc, t) => {
-                    acc[t.Category] = (acc[t.Category] || 0) + 1;
-                    return acc;
-                  }, {})).reduce((max, c) => (c[1] > max[1] ? c : max), ["N/A", 0])[0]
-                : "N/A"}
-            </Typography>
-          </CardContent>
-        </Card>
-      </Box>
+  <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
+    <CardContent>
+      <Typography variant="h6">Most Common Category</Typography>
+      <Typography variant="h4">
+        {filteredTickets.length > 0
+          ? Object.entries(filteredTickets.reduce((acc, t) => {
+              acc[t.Category] = (acc[t.Category] || 0) + 1;
+              return acc;
+            }, {})).reduce((max, c) => (c[1] > max[1] ? c : max), ["N/A", 0])[0]
+          : "N/A"}
+      </Typography>
+    </CardContent>
+  </Card>
+</Box>
+
 
 
       <Card sx={{ p: 2, mb: 3, textAlign: "center", marginTop: 4}}>
@@ -242,6 +259,38 @@ export default function TicketReport() {
       </Box>
     </Box>
 
+    {/* Pending Tickets by Technician Table */}
+    <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
+      <CardContent>
+        <Typography variant="h6" gutterBottom>Pending Tickets by Technician</Typography>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell><strong>Technician</strong></TableCell>
+                <TableCell><strong>Pending Tickets</strong></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {pendingTechData.length > 0 ? (
+                pendingTechData.map((entry, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{entry.tech}</TableCell>
+                    <TableCell>{entry.count}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={2} align="center">
+                    No Pending Tickets
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </CardContent>
+    </Card>
 
       <Typography variant="h5" sx={{ mt: 4 }}>Tickets Assigned to Tech</Typography>
       <ResponsiveContainer width="100%" height={300}>
@@ -253,6 +302,20 @@ export default function TicketReport() {
           <Bar dataKey="value" fill="#1a74e2" />
         </BarChart>
       </ResponsiveContainer>
+
+      <Box sx={{ mt: 2, display: "flex", gap: 2 }}>
+        <Button variant="contained" color="secondary" onClick={exportPDF}>
+          Export PDF
+        </Button>
+        <CSVLink data={filteredTickets} filename="ticket_report.csv" style={{ textDecoration: "none" }}>
+          <Button variant="contained" color="success">Export CSV</Button>
+        </CSVLink>
+        <Button variant="contained" color="primary" onClick={handlePrint}>
+          Print Report
+        </Button>
+      </Box>
+
+      
     </Container>
   );
 }

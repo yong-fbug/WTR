@@ -99,7 +99,7 @@ function App() {
               <List>
                 <ListItem>
                   <PersonIcon sx={{ marginRight: 1 }} />
-                  <ListItemText primary="User Account" />
+                  <ListItemText primary="OJT-Ravago" />
                 </ListItem>
                 <ListItem>
                   <Button variant="contained" fullWidth startIcon={<LogoutIcon />} className="bg-black" >
