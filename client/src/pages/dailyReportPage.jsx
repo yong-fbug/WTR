@@ -7,7 +7,7 @@ import {
 } from "recharts";
 import {
   Container, TextField, Button, Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper, Typography, Box, Card, CardContent
+  TableHead, TableRow, Paper, Typography, Box, Card, CardContent, Alert
 } from "@mui/material";
 import { PieChart, Pie, Cell } from "recharts";
 
@@ -16,12 +16,13 @@ export default function TicketReport() {
   const [tickets, setTickets] = useState([]);
   const [filteredTickets, setFilteredTickets] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [submissionStatus, setSubmissionStatus] = useState(null);
   const textAreaRef = useRef(null);
 
   const handlePaste = () => {
     const text = textAreaRef.current.value;
     const lines = text.split("\n").map(line => line.trim()).filter(line => line);
-    const headers = ["Ticket Number", "Date Submitted", "Requestor Email", "Status", "Assigned Tech Support", "Category"];
+    const headers = ["Ticket Number", "Date Submitted", "Requestor Email", "Status", "Assigned Tech Support", "Category", "Sub-Category", "Sub-Sub-Category"];
     const data = [];
     let ticket = {};
     let currentHeader = null;
@@ -39,10 +40,16 @@ export default function TicketReport() {
       }
     });
 
-    setTickets(prevTickets => [...prevTickets, ...data]);
-    setFilteredTickets(prevTickets => [...prevTickets, ...data]);
-    textAreaRef.current.value = "";
+    if (data.length > 0) {
+      setTickets(prevTickets => [...prevTickets, ...data]);
+      setFilteredTickets(prevTickets => [...prevTickets, ...data]);
+      textAreaRef.current.value = "";
+      setSubmissionStatus("success");
+    } else {
+      setSubmissionStatus("error");
+    }
   };
+
 
   const totalTickets = filteredTickets.length;
 
@@ -106,7 +113,7 @@ const pendingTechData = Object.entries(
 
   return (
     <Container maxWidth="lg">
-      <Typography variant="h4" gutterBottom>Ticket Report</Typography>
+      <Typography variant="h4" gutterBottom>Daily Ticket Report</Typography>
       <TextField
         inputRef={textAreaRef}
         multiline
@@ -117,15 +124,23 @@ const pendingTechData = Object.entries(
         placeholder="Paste ticket content here..."
         sx={{ mb: 2 }}
       />
-      <Button variant="contained" color="primary" onClick={handlePaste} sx={{ mb: 2 }}>Enter</Button>
+      
+      <Button variant="contained" color="primary" onClick={handlePaste} sx={{ mb: 2}}>Submit</Button>
+      
+      <hr className="text-gray-400"/>
+
       <TextField
         fullWidth
         label="Search tickets"
         variant="outlined"
         value={searchTerm}
         onChange={handleSearch}
-        sx={{ mb: 2 }}
+        sx={{ mb: 2, mt: 5  }}
       />
+
+      {submissionStatus === "success" && <Alert severity="success">Data submitted successfully!</Alert>}
+            {submissionStatus === "error" && <Alert severity="error">Failed to submit data. Please check the format and try again.</Alert>}
+      
       <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
         <Table stickyHeader>
           <TableHead>
@@ -146,71 +161,60 @@ const pendingTechData = Object.entries(
           </TableBody>
         </Table>
       </TableContainer>
-      <Box sx={{ mt: 2, display: "flex", gap: 2 }}>
-        <Button variant="contained" color="secondary" onClick={exportPDF}>Export PDF</Button>
-        <CSVLink data={filteredTickets} filename="ticket_report.csv" style={{ textDecoration: "none" }}>
-          <Button variant="contained" color="success">Export CSV</Button>
-        </CSVLink>
+
+{/* Total Tickets */}
+      <Box sx={{ display: "flex", gap: 2, justifyContent: "space-between", mt: 4 }}>
+        <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
+          <CardContent>
+            <Typography variant="h6"><b>Total Tickets</b></Typography>
+            <Typography variant="h4">{totalTickets}</Typography>
+          </CardContent>
+        </Card>
+
+{/* Pending Tickets */}
+        <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
+          <CardContent>
+            <Typography variant="h6"><b>Pending Tickets</b></Typography>
+            <Typography variant="h4">{ticketStatusData.find(t => t.name === "Open")?.value || 0}</Typography>
+          </CardContent>
+        </Card>
+
+{/* Resolved Tickets */}
+        <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
+          <CardContent>
+            <Typography variant="h6"><b>Resolved Tickets</b></Typography>
+            <Typography variant="h4">{ticketStatusData.find(t => t.name === "Closed")?.value || 0}</Typography>
+          </CardContent>
+        </Card>
+
+{/* Active Tech */}
+        <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
+          <CardContent>
+            <Typography variant="h6"><b>Most Active Tech</b></Typography>
+            <Typography variant="h5">
+              {ticketTechData.length > 0 ? ticketTechData.reduce((max, t) => (t.value > max.value ? t : max), ticketTechData[0]).name : "N/A"}
+            </Typography>
+          </CardContent>
+        </Card>
+
+{/* Common Category */}
+        <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
+          <CardContent>
+            <Typography variant="h6">
+              <b>Most Common Category</b>
+            </Typography>
+            <Typography variant="h6">
+              {filteredTickets.length > 0
+                ? Object.entries(filteredTickets.reduce((acc, t) => {
+                    acc[t.Category] = (acc[t.Category] || 0) + 1;
+                    return acc;
+                  }, {})).reduce((max, c) => (c[1] > max[1] ? c : max), ["N/A", 0])[0]
+                : "N/A"}
+            </Typography>
+          </CardContent>
+        </Card>
       </Box>
-
-      {/* Summary */}
-      {/* Summary Report */}
-      {/* Summary Report */}
-<Box sx={{ display: "flex", gap: 2, justifyContent: "space-between", mt: 4 }}>
-  <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
-    <CardContent>
-      <Typography variant="h6">Total Tickets</Typography>
-      <Typography variant="h4">{totalTickets}</Typography>
-    </CardContent>
-  </Card>
-
-  <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
-    <CardContent>
-      <Typography variant="h6">Pending Tickets</Typography>
-      <Typography variant="h4">{ticketStatusData.find(t => t.name === "Open")?.value || 0}</Typography>
-    </CardContent>
-  </Card>
-
-  <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
-    <CardContent>
-      <Typography variant="h6">Resolved Tickets</Typography>
-      <Typography variant="h4">{ticketStatusData.find(t => t.name === "Closed")?.value || 0}</Typography>
-    </CardContent>
-  </Card>
-
-  <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
-    <CardContent>
-      <Typography variant="h6">Most Active Tech</Typography>
-      <Typography variant="h4">
-        {ticketTechData.length > 0 ? ticketTechData.reduce((max, t) => (t.value > max.value ? t : max), ticketTechData[0]).name : "N/A"}
-      </Typography>
-    </CardContent>
-  </Card>
-
-  <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
-    <CardContent>
-      <Typography variant="h6">Most Common Category</Typography>
-      <Typography variant="h4">
-        {filteredTickets.length > 0
-          ? Object.entries(filteredTickets.reduce((acc, t) => {
-              acc[t.Category] = (acc[t.Category] || 0) + 1;
-              return acc;
-            }, {})).reduce((max, c) => (c[1] > max[1] ? c : max), ["N/A", 0])[0]
-          : "N/A"}
-      </Typography>
-    </CardContent>
-  </Card>
-</Box>
-
-
-
-      <Card sx={{ p: 2, mb: 3, textAlign: "center", marginTop: 4}}>
-        <CardContent>
-          <Typography variant="h5">Total Tickets</Typography>
-          <Typography variant="h3">{totalTickets}</Typography>
-        </CardContent>
-      </Card>
-
+      
       <Box sx={{ display: "flex", gap: 2, justifyContent: "space-between", mt: 4 }}>
       {/* Tickets by Time of Day */}
       <Box sx={{ flex: 1 }}>
@@ -311,7 +315,7 @@ const pendingTechData = Object.entries(
           <Button variant="contained" color="success">Export CSV</Button>
         </CSVLink>
         <Button variant="contained" color="primary" onClick={handlePrint}>
-          Print Report
+          Download
         </Button>
       </Box>
 

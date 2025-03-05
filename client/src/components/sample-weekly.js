@@ -2,9 +2,7 @@ import React, { useState, useRef } from "react";
 import { CSVLink } from "react-csv";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { 
-   Container, TextField, Button, Typography, Box, Table, TableBody,
-   TableCell, TableContainer, TableHead, TableRow, Paper, Alert } from "@mui/material";
+import { Container, TextField, Button, Typography, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import TicketTable from "../components/TicketTable";
 import TicketStats from "../components/TicketStats";
 import TicketCharts from "../components/TicketCharts";
@@ -17,7 +15,6 @@ export default function TicketReport() {
   const [tickets, setTickets] = useState([]);
   const [filteredTickets, setFilteredTickets] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [submissionStatus, setSubmissionStatus] = useState(null);
   const textAreaRef = useRef(null);
 
   const handlePaste = () => {
@@ -41,14 +38,9 @@ export default function TicketReport() {
       }
     });
 
-    if (data.length > 0) {
-      setTickets(prevTickets => [...prevTickets, ...data]);
-      setFilteredTickets(prevTickets => [...prevTickets, ...data]);
-      textAreaRef.current.value = "";
-      setSubmissionStatus("success");
-    } else {
-      setSubmissionStatus("error");
-    }
+    setTickets(prevTickets => [...prevTickets, ...data]);
+    setFilteredTickets(prevTickets => [...prevTickets, ...data]);
+    textAreaRef.current.value = "";
   };
 
   const totalTickets = filteredTickets.length;
@@ -61,13 +53,6 @@ export default function TicketReport() {
       )
     );
     setFilteredTickets(filtered);
-  };
-
-  const handleStatusChange = (index, newStatus) => {
-    const updatedTickets = [...filteredTickets];
-    updatedTickets[index]["Status"] = newStatus;
-    setFilteredTickets(updatedTickets);
-    setTickets(tickets.map(ticket => ticket["Ticket Number"] === updatedTickets[index]["Ticket Number"] ? updatedTickets[index] : ticket));
   };
 
   const exportPDF = () => {
@@ -85,8 +70,7 @@ export default function TicketReport() {
 
   const ticketTechData = Object.entries(
     filteredTickets.reduce((acc, t) => {
-      const cleanName = t['Assigned Tech Support'].replace(/@ravago\.com\.ph$/, "").replace(/\./g, "");
-      acc[cleanName] = (acc[cleanName] || 0) + 1;
+      acc[t["Assigned Tech Support"]] = (acc[t["Assigned Tech Support"]] || 0) + 1;
       return acc;
     }, {})
   ).map(([key, value]) => ({ name: key, value }));
@@ -148,21 +132,21 @@ export default function TicketReport() {
       acc[t.Category] = (acc[t.Category] || 0) + 1;
       return acc;
     }, {})
-  ).map(([key, value]) => ({ name: key, value }));
+  ).map(([key, value]) => ({ name: key, value })).sort((a, b) => b.value - a.value);
 
   const subCategoryData = Object.entries(
     filteredTickets.reduce((acc, t) => {
       acc[t["Sub-Category"]] = (acc[t["Sub-Category"]] || 0) + 1;
       return acc;
     }, {})
-  ).map(([key, value]) => ({ name: key, value }));
+  ).map(([key, value]) => ({ name: key, value })).sort((a, b) => b.value - a.value);
 
   const subSubCategoryData = Object.entries(
     filteredTickets.reduce((acc, t) => {
       acc[t["Sub-Sub-Category"]] = (acc[t["Sub-Sub-Category"]] || 0) + 1;
       return acc;
     }, {})
-  ).map(([key, value]) => ({ name: key, value }));
+  ).map(([key, value]) => ({ name: key, value })).sort((a, b) => b.value - a.value);
 
   return (
     <Container maxWidth="lg">
@@ -178,9 +162,6 @@ export default function TicketReport() {
         sx={{ mb: 2 }}
       />
       <Button variant="contained" color="primary" onClick={handlePaste} sx={{ mb: 2 }}>Submit</Button>
-      
-      {submissionStatus === "success" && <Alert severity="success">Data submitted successfully!</Alert>}
-      {submissionStatus === "error" && <Alert severity="error">Failed to submit data. Please check the format and try again.</Alert>}
       <hr className="text-gray-400" />
       <TextField
         fullWidth
@@ -190,7 +171,7 @@ export default function TicketReport() {
         onChange={handleSearch}
         sx={{ mb: 2, mt: 5 }}
       />
-      <TicketTable filteredTickets={filteredTickets} handleStatusChange={handleStatusChange} />
+      <TicketTable filteredTickets={filteredTickets} />
       <TicketStats totalTickets={totalTickets} ticketStatusData={ticketStatusData} ticketTechData={ticketTechData} filteredTickets={filteredTickets} />
       <TicketCharts amPmChartData={amPmChartData} ticketStatusData={ticketStatusData} ticketTechData={ticketTechData} />
       <PendingTicketsTable totalTickets={totalTickets} weekdayTickets={weekdayTickets} pendingTechData={pendingTechDataArray} />
@@ -201,32 +182,6 @@ export default function TicketReport() {
         </CSVLink>
         <Button variant="contained" color="primary" onClick={handlePrint}>Download</Button>
       </Box>
-      
-{/* Chart of Category */}
-      <Box sx={{ 
-          mt: 5, 
-          display: "flex", 
-          gap: 4, 
-          justifyContent: "space-between", 
-          flexWrap: "wrap"
-        }}>
-          <Box sx={{ flex: 1, minWidth: 300 }}>
-            <Typography variant="h5" gutterBottom></Typography>
-            <CategoryChart data={categoryData} />
-          </Box>
-          
-          <Box sx={{ flex: 1, minWidth: 300 }}>
-            <Typography variant="h5" gutterBottom></Typography>
-            <SubCategoryChart data={subCategoryData} />
-          </Box>
-          
-          <Box sx={{ flex: 1, minWidth: 300 }}>
-            <Typography variant="h5" gutterBottom></Typography>
-            <SubSubCategoryChart data={subSubCategoryData} />
-          </Box>
-        </Box>
-
-
       <Box sx={{ mt: 5 }}>
         <Typography variant="h5" gutterBottom>Category Analysis</Typography>
         <TableContainer component={Paper}>
