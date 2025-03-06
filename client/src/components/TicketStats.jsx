@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Card, CardContent, Typography } from "@mui/material";
+import PropTypes from 'prop-types';
 
 const TicketStats = ({ totalTickets, ticketStatusData, ticketTechData, filteredTickets }) => {
   const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
@@ -26,6 +27,10 @@ const TicketStats = ({ totalTickets, ticketStatusData, ticketTechData, filteredT
       }, {})).reduce((max, c) => (c[1] > max[1] ? c : max), ["N/A", 0])[0]
     : "N/A";
 
+  // Calculate Pending and Resolved Tickets
+  const pendingTickets = ticketStatusData.find(t => t.name === "Open")?.value || 0;
+  const resolvedTickets = ticketStatusData.find(t => t.name === "Closed")?.value || 0;
+
   return (
     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mt: 4 }}>
       {/* Total Week Tickets */}
@@ -51,13 +56,13 @@ const TicketStats = ({ totalTickets, ticketStatusData, ticketTechData, filteredT
         <Card sx={{ p: 2, textAlign: "center" }}>
           <CardContent>
             <Typography variant="h6"><b>Pending Tickets</b></Typography>
-            <Typography variant="h4">{ticketStatusData.find(t => t.name === "Open")?.value || 0}</Typography>
+            <Typography variant="h4">{pendingTickets}</Typography>
           </CardContent>
         </Card>
         <Card sx={{ p: 2, textAlign: "center" }}>
           <CardContent>
             <Typography variant="h6"><b>Resolved Tickets</b></Typography>
-            <Typography variant="h4">{ticketStatusData.find(t => t.name === "Closed")?.value || 0}</Typography>
+            <Typography variant="h4">{resolvedTickets}</Typography>
           </CardContent>
         </Card>
         <Card sx={{ p: 2, textAlign: "center" }}>
@@ -75,6 +80,34 @@ const TicketStats = ({ totalTickets, ticketStatusData, ticketTechData, filteredT
       </Box>
     </Box>
   );
+};
+
+TicketStats.propTypes = {
+  totalTickets: PropTypes.number.isRequired,
+  ticketStatusData: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired,
+    })
+  ).isRequired,
+  ticketTechData: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired,
+    })
+  ).isRequired,
+  filteredTickets: PropTypes.arrayOf(
+    PropTypes.shape({
+      "Ticket Number": PropTypes.string.isRequired,
+      "Date Submitted": PropTypes.string.isRequired,
+      "Requestor Email": PropTypes.string.isRequired,
+      "Status": PropTypes.string.isRequired,
+      "Assigned Tech Support": PropTypes.string.isRequired,
+      "Category": PropTypes.string.isRequired,
+      "Sub-Category": PropTypes.string.isRequired,
+      "Sub-Sub-Category": PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };
 
 export default TicketStats;

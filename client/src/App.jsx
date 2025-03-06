@@ -9,17 +9,18 @@ import {
   Button,
   Typography,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import WeeklyReportPage from "./pages/weeklyReportPage.jsx";
-import DailyReportPage from "./pages/dailyReportPage.jsx";
 import { GlobalStyles } from "@mui/material";
 import Login from './components/Login';
-import Signup from './components/Signup';
+import Signup from "./components/SignUp.jsx";
 import { AnimatePresence } from "framer-motion";
+import PropTypes from 'prop-types';
 
 function App() {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
@@ -46,6 +47,8 @@ function App() {
   const handleLogout = () => {
     setIsLoggedIn(false);
   };
+
+  
 
   if (!isLoggedIn) {
     return (
@@ -100,18 +103,20 @@ function App() {
           }}
         >
           {/* Toggle Button */}
-          <IconButton
-            onClick={() => setSidebarOpen(!isSidebarOpen)}
-            sx={{
-              position: "absolute",
-              top: 10,
-              left: isSidebarOpen ? 210 : 10,
-              transition: "left 0.3s ease",
-              zIndex: 2,
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
+          <Tooltip title="Toggle Sidebar">
+            <IconButton
+              onClick={() => setSidebarOpen(!isSidebarOpen)}
+              sx={{
+                position: "absolute",
+                top: 10,
+                left: isSidebarOpen ? 210 : 10,
+                transition: "left 0.3s ease",
+                zIndex: 2,
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Tooltip>
 
           {/* Navigation Links */}
           {isSidebarOpen && (
@@ -160,8 +165,8 @@ function App() {
         >
           <Routes>
             <Route path="/weekly-report" element={<WeeklyReportPage />} />
-            <Route path="/daily-report" element={<DailyReportPage />} />
             <Route path="/" element={<Typography variant="h4">Report Dashboard</Typography>} />
+            <Route path="*" element={<Typography variant="h4">404 Not Found</Typography>} />
           </Routes>
         </Box>
       </main>
@@ -175,32 +180,6 @@ function NavigationLinks({ handleLogout }) {
   return (
     <>
       <List>
-        <ListItem
-          button
-          component={Link}
-          to="/daily-report"
-          sx={{
-            position: "relative",
-            "&::after": {
-              content: '""',
-              display: "block",
-              width: location.pathname === "/daily-report" ? "100%" : "0%",
-              height: "2px",
-              backgroundColor: "primary.main",
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              transition: "width 0.3s ease-in-out",
-            },
-            "&:hover::after": {
-              width: "100%",
-            },
-          }}
-        >
-          <EventNoteIcon sx={{ marginRight: 1 }} />
-          <ListItemText primary="Daily Report" />
-        </ListItem>
-
         <ListItem
           button
           component={Link}
@@ -230,5 +209,9 @@ function NavigationLinks({ handleLogout }) {
     </>
   );
 }
+
+NavigationLinks.propTypes = {
+  handleLogout: PropTypes.func.isRequired,
+};
 
 export default App;
