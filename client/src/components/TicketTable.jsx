@@ -45,7 +45,7 @@ const TicketTable = ({ filteredTickets, handleStatusChange, handleTechChange }) 
 
   return (
     <>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ maxHeight: 400, overflow: 'auto'}}>
         <Table>
           <TableHead>
             <TableRow>

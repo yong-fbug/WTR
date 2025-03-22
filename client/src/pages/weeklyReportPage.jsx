@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { CSVLink } from "react-csv";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { 
    Container, TextField, Button, Typography, Box, Table, TableBody,
-   TableCell, TableContainer, TableHead, TableRow, Paper, Alert, Card, CardContent } from "@mui/material";
+   TableCell, TableContainer, TableHead, TableRow, Paper, Alert } from "@mui/material";
 import TicketTable from "../components/TicketTable";
 import TicketStats from "../components/TicketStats";
 import TicketCharts from "../components/TicketCharts";
@@ -33,7 +33,12 @@ export default function TicketReport() {
   const handlePaste = () => {
     const text = textAreaRef.current.value;
     const lines = text.split("\n").map(line => line.trim()).filter(line => line);
-    const headers = ["Ticket Number", "Date Submitted", "Requestor Email", "Status", "Assigned Tech Support", "Category", "Sub-Category", "Sub-Sub-Category"];
+    const headers = [
+      "Ticket Number", "Date Submitted", 
+      "Requestor Email", "Status", 
+      "Assigned Tech Support", "Category", 
+      "Sub-Category", "Sub-Sub-Category"
+    ];
     const data = [];
     let ticket = {};
     let currentHeader = null;
@@ -185,7 +190,7 @@ export default function TicketReport() {
       acc[t["Sub-Sub-Category"]] = (acc[t["Sub-Sub-Category"]] || 0) + 1;
       return acc;
     }, {})
-  ).map(([key, value]) => ({ name, value }));
+  ).map(([key, value]) => ({ name: key, value }));
 
   return (
     <Container maxWidth="lg">
@@ -229,9 +234,9 @@ export default function TicketReport() {
       {/* Chart of Category */}
       <Box sx={{ 
           mt: 5, 
-          display: "flex", 
+          display: "flex-col", 
           gap: 4, 
-          justifyContent: "space-between", 
+          justifyContent: "space-between",
           flexWrap: "wrap"
         }}>
           <Box sx={{ flex: 1, minWidth: 300 }}>
@@ -250,7 +255,7 @@ export default function TicketReport() {
           </Box>
         </Box>
 
-      <Box sx={{ mt: 5 }}>
+      {/* <Box sx={{ mt: 5 }}>
         <Typography variant="h5" gutterBottom>Category Analysis</Typography>
         <TableContainer component={Paper}>
           <Table>
@@ -312,7 +317,7 @@ export default function TicketReport() {
             </TableBody>
           </Table>
         </TableContainer>
-      </Box>
+      </Box> */}
     </Container>
   );
 }

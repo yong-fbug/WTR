@@ -12,7 +12,7 @@ const TicketCharts = ({ amPmChartData, ticketStatusData, ticketTechData }) => {
             <PieChart>
               <Pie data={amPmChartData} dataKey="value" nameKey="name" outerRadius={100} fill="#8884d8" label={({ name, value }) => `${name}: ${value}`}>
                 {amPmChartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={["#0088FE", "#FFBB28"][index]} />
+                  <Cell key={`cell-${index}`} fill={["#007BFF", "#FF8C00"][index]} />
                 ))}
               </Pie>
               <Tooltip />
@@ -22,11 +22,11 @@ const TicketCharts = ({ amPmChartData, ticketStatusData, ticketTechData }) => {
         </Box>
         <Box sx={{ flex: 1 }}>
           <Typography variant="h5">Ticket Status</Typography>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={300}> 
             <PieChart>
               <Pie data={ticketStatusData} dataKey="value" nameKey="name" outerRadius={100} fill="#8884d8" label={({ name, value }) => `${name}: ${value}`}>
                 {ticketStatusData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={["#0088FE", "#00C49F", "#FFBB28", "#FF8042"][index % 4]} />
+                  <Cell key={`cell-${index}`} fill={["#28A745", "#DC3545"][index % 4]} />
                 ))}
               </Pie>
               <Tooltip />
