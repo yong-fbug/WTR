@@ -44,7 +44,7 @@ const TicketTable = ({ filteredTickets, handleStatusChange, handleTechChange }) 
   };
 
   return (
-    <>
+    <div className="mb-190">
       <TableContainer component={Paper} sx={{ maxHeight: 400, overflow: 'auto'}}>
         <Table>
           <TableHead>
@@ -132,7 +132,7 @@ const TicketTable = ({ filteredTickets, handleStatusChange, handleTechChange }) 
           )}
         </Box>
       </Modal>
-    </>
+    </div>
   );
 };
 

@@ -5,7 +5,7 @@ const PendingTicketsTable = ({ totalTickets, weekdayTickets, pendingTechData = [
   const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
   return (
-    <TableContainer component={Paper} sx={{ maxHeight: 400, overflow: "auto"}}>
+    <TableContainer component={Paper} sx={{ maxHeight: 'none', overflow: "auto"}}>
       <Table>
         <TableHead>
           <TableRow>

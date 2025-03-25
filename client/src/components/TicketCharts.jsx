@@ -1,16 +1,16 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, LabelList } from "recharts";
 
 const TicketCharts = ({ amPmChartData, ticketStatusData, ticketTechData }) => {
   return (
-    <>
+    <div className="mt-50">
       <Box sx={{ display: "flex", gap: 2, justifyContent: "space-between", mt: 4 }}>
         <Box sx={{ flex: 1 }}>
           <Typography variant="h5">Tickets by Time of Day</Typography>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
-              <Pie data={amPmChartData} dataKey="value" nameKey="name" outerRadius={100} fill="#8884d8" label={({ name, value }) => `${name}: ${value}`}>
+              <Pie className="text-1xl font-semibold" data={amPmChartData} dataKey="value" nameKey="name" outerRadius={100} fill="#8884d8" label={({ name, value }) => `${name}: ${value}`}>
                 {amPmChartData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={["#007BFF", "#FF8C00"][index]} />
                 ))}
@@ -21,12 +21,12 @@ const TicketCharts = ({ amPmChartData, ticketStatusData, ticketTechData }) => {
           </ResponsiveContainer>
         </Box>
         <Box sx={{ flex: 1 }}>
-          <Typography variant="h5">Ticket Status</Typography>
+          <Typography variant="h5" className="font-bold">Ticket Status</Typography>
           <ResponsiveContainer width="100%" height={300}> 
             <PieChart>
-              <Pie data={ticketStatusData} dataKey="value" nameKey="name" outerRadius={100} fill="#8884d8" label={({ name, value }) => `${name}: ${value}`}>
+              <Pie className="text-1xl font-semibold" data={ticketStatusData} dataKey="value" nameKey="name" outerRadius={100} fill="#8884d8" label={({ name, value }) => `${name}: ${value}`}>
                 {ticketStatusData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={["#28A745", "#DC3545"][index % 4]} />
+                  <Cell key={`cell-${index}`} fill={["#00C49F", "#FF8042"][index % 4]} />
                 ))}
               </Pie>
               <Tooltip />
@@ -39,7 +39,7 @@ const TicketCharts = ({ amPmChartData, ticketStatusData, ticketTechData }) => {
         <Typography variant="h5">Tickets Assigned to Tech</Typography>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={ticketTechData}>
-            <XAxis dataKey="name" />
+            <XAxis dataKey="name" stroke="#000"/>
             <YAxis />
             <Tooltip />
             <Legend />
@@ -47,7 +47,7 @@ const TicketCharts = ({ amPmChartData, ticketStatusData, ticketTechData }) => {
           </BarChart>
         </ResponsiveContainer>
       </Box>
-    </>
+    </div>
   );
 };
 

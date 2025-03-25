@@ -113,7 +113,10 @@ export default function TicketReport() {
 
   const ticketTechData = Object.entries(
     filteredTickets.reduce((acc, t) => {
-      const cleanName = t['Assigned Tech Support'].replace(/@ravago\.com\.ph$/, "").replace(/\./g, "");
+      const cleanName = t['Assigned Tech Support']
+        .replace(/@ravago\.com\.ph$/, "")
+        .replace(/@smartrigs\.com\.ph$/, "")
+        .replace(/\./g, "");
       acc[cleanName] = (acc[cleanName] || 0) + 1;
       return acc;
     }, {})
@@ -222,6 +225,7 @@ export default function TicketReport() {
       <TicketTable filteredTickets={filteredTickets} handleStatusChange={handleStatusChange} handleTechChange={handleTechChange} />
       <TicketStats totalTickets={totalTickets} ticketStatusData={ticketStatusData} ticketTechData={ticketTechData} filteredTickets={filteredTickets} />
       <TicketCharts amPmChartData={amPmChartData} ticketStatusData={ticketStatusData} ticketTechData={ticketTechData} />
+      
       <PendingTicketsTable totalTickets={totalTickets} weekdayTickets={weekdayTickets} pendingTechData={pendingTechDataArray} />
       <Box sx={{ mt: 2, display: "flex", gap: 2 }}>
         <Button variant="contained" color="secondary" onClick={exportPDF}>Export PDF</Button>
@@ -239,18 +243,15 @@ export default function TicketReport() {
           justifyContent: "space-between",
           flexWrap: "wrap"
         }}>
-          <Box sx={{ flex: 1, minWidth: 300 }}>
-            <Typography variant="h5" gutterBottom>Category Analysis</Typography>
+          <Box sx={{ flex: 1, minWidth: 300 }}> 
             <CategoryChart data={categoryData} />
           </Box>
           
           <Box sx={{ flex: 1, minWidth: 300 }}>
-            <Typography variant="h5" gutterBottom>Sub-Category Analysis</Typography>
             <SubCategoryChart data={subCategoryData} />
           </Box>
           
           <Box sx={{ flex: 1, minWidth: 300 }}>
-            <Typography variant="h5" gutterBottom>Sub-Sub-Category Analysis</Typography>
             <SubSubCategoryChart data={subSubCategoryData} />
           </Box>
         </Box>

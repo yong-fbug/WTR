@@ -5,6 +5,14 @@ import PropTypes from 'prop-types';
 const TicketStats = ({ totalTickets, ticketStatusData, ticketTechData, filteredTickets }) => {
   const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
+  // Get current date
+  const currentDate = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  });
+
   // Count tickets by weekday
   const weekdayTickets = daysOfWeek.reduce((acc, day) => {
     acc[day] = filteredTickets.filter(ticket => {
@@ -33,6 +41,9 @@ const TicketStats = ({ totalTickets, ticketStatusData, ticketTechData, filteredT
 
   return (
     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mt: 4 }}>
+      <Typography variant="h6" sx={{ width: "100%", textAlign: "center", fontSize: 50 }}>
+        {currentDate}
+      </Typography>
       {/* Total Week Tickets */}
       <Card sx={{ flex: 1, p: 2, textAlign: "center" }}>
         <CardContent>
