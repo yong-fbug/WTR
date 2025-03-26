@@ -57,7 +57,7 @@ const CategoryBarChart = ({ data }) => {
         border: `1px solid ${theme.palette.divider}`,
       }}
     >
-      <Typography variant="h6" fontWeight="bold" fontSize={50} color="primary" sx={{ mb: 2, fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>
+      <Typography variant="h6" fontWeight="bold" fontSize={50} color="primary" sx={{ mb: 2, fontFamily: 'fo, sans-serif', fontWeight: 600 }}>
         Sub-Category Analysis
       </Typography>
       <ResponsiveContainer width="100%" height={Math.max(400, data.length * 35)}>
@@ -71,6 +71,7 @@ const CategoryBarChart = ({ data }) => {
             interval={0}
             stroke="#000"
             tick={{ fontSize: 19, fontWeight: 'bold'}}
+            className="uppercase"
           />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(0, 0, 0, 0.05)" }} />
           <Legend />

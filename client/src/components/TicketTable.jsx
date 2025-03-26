@@ -44,10 +44,10 @@ const TicketTable = ({ filteredTickets, handleStatusChange, handleTechChange }) 
   };
 
   return (
-    <div className="mb-190">
+    <div className="mb-250">
       <TableContainer component={Paper} sx={{ maxHeight: 400, overflow: 'auto'}}>
         <Table>
-          <TableHead>
+          <TableHead sx={{ position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 1}}>
             <TableRow>
               <TableCell><strong>Ticket Number</strong></TableCell>
               <TableCell><strong>Date Submitted</strong></TableCell>
@@ -56,7 +56,7 @@ const TicketTable = ({ filteredTickets, handleStatusChange, handleTechChange }) 
               <TableCell><strong>Assigned Tech Support</strong></TableCell>
               <TableCell><strong>Category</strong></TableCell>
               <TableCell><strong>Sub-Category</strong></TableCell>
-              <TableCell><strong>Sub-Sub-Category</strong></TableCell>
+              <TableCell sx={{ width: 180 }}><strong>Sub-Sub-Category</strong></TableCell>
               <TableCell><strong>Edit</strong></TableCell>
             </TableRow>
           </TableHead>

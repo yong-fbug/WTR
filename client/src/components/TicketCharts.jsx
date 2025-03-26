@@ -4,13 +4,14 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Ba
 
 const TicketCharts = ({ amPmChartData, ticketStatusData, ticketTechData }) => {
   return (
-    <div className="mt-50">
+    <div className="mt-150">
       <Box sx={{ display: "flex", gap: 2, justifyContent: "space-between", mt: 4 }}>
         <Box sx={{ flex: 1 }}>
           <Typography variant="h5">Tickets by Time of Day</Typography>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
-              <Pie className="text-1xl font-semibold" data={amPmChartData} dataKey="value" nameKey="name" outerRadius={100} fill="#8884d8" label={({ name, value }) => `${name}: ${value}`}>
+              <Pie className="text-1xl font-semibold" data={amPmChartData} dataKey="value" 
+              nameKey="name" outerRadius={100} fill="#8884d8" label={({ name, value }) => `${name}: ${value}`}>
                 {amPmChartData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={["#007BFF", "#FF8C00"][index]} />
                 ))}

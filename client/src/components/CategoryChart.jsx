@@ -71,7 +71,8 @@ const CategoryBarChart = ({ data }) => {
               width={200}
               interval={0}
               stroke="#000"
-              tick={{ fontSize: 19, fontWeight: 'bold'}}
+              tick={{ fontSize: 16, fontWeight: 'bold'}}
+              className="uppercase"
             />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(0, 0, 0, 0.05)" }} />
             <Legend />
