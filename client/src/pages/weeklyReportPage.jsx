@@ -19,13 +19,22 @@ export default function TicketReport() {
   const textAreaRef = useRef(null);
 
   useEffect(() => {
-    if (submissionStatus) {
-      const timer = setTimeout(() => {
-        setSubmissionStatus(null);
-      }, 1000);
-      return () => clearTimeout(timer);
+    const storedTickets = localStorage.getItem("tickets");
+    if (storedTickets) {
+      const parsedTickets = JSON.parse(storedTickets);
+      setFilteredTickets(JSON.parse(storedTickets));
+      setTickets(parsedTickets)
     }
-  }, [submissionStatus]);
+  }, []);
+  
+
+  // Save tickets to in browser
+  useEffect(() => {
+    if (tickets.length > 0) {
+      localStorage.setItem('tickets', JSON.stringify(tickets));
+    }
+  }, [tickets]);
+  
 
   const handlePaste = () => {
     const text = textAreaRef.current.value;
@@ -179,6 +188,13 @@ export default function TicketReport() {
     }, {})
   ).map(([key, value]) => ({ name: key, value }));
 
+  const clearStorage = () => {
+    localStorage.removeItem("tickets");  // Removes from localStorage
+    sessionStorage.removeItem("tickets"); // If stored in sessionStorage
+    setTickets([]);  // Clear state
+    setFilteredTickets([]);
+  };
+
   return (
     <Container maxWidth="lg">
       <Typography variant="h4" gutterBottom>Ticket Report</Typography>
@@ -206,6 +222,9 @@ export default function TicketReport() {
         onChange={handleSearch}
         sx={{ mb: 2, mt: 5 }}
       />
+      <Button variant="contained" color="error" onClick={clearStorage}>
+        DELETE ALL
+      </Button>
       <TicketTable
         filteredTickets={filteredTickets}
         handleStatusChange={handleStatusChange}
