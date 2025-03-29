@@ -10,7 +10,7 @@ import PendingTicketsTable from "../components/PendingTicketsTable";
 import CategoryChart from "../components/CategoryChart";
 import SubCategoryChart from "../components/SubCategoryChart";
 import SubSubCategoryChart from "../components/SubSubCategoryChart";
-
+  
 export default function TicketReport() {
   const [tickets, setTickets] = useState([]);
   const [filteredTickets, setFilteredTickets] = useState([]);
@@ -69,6 +69,7 @@ export default function TicketReport() {
       setFilteredTickets(prev => [...prev, ...newTickets]);
       textAreaRef.current.value = "";
       setSubmissionStatus("success");
+      setTimeout(() => setSubmissionStatus(null), 2000);
     } else if (data.length > 0) {
       setSubmissionStatus("duplicate");
     } else {
@@ -195,6 +196,14 @@ export default function TicketReport() {
     setFilteredTickets([]);
   };
 
+  const deleteTicketById = (ticketNumber) => {
+    const updatedTickets = tickets.filter(ticket => ticket["Ticket Number"] !== ticketNumber);
+    setTickets(updatedTickets);
+    setFilteredTickets(updatedTickets);
+    localStorage.setItem("tickets", JSON.stringify(updatedTickets));  
+  };
+
+  
   return (
     <Container maxWidth="lg">
       <Typography variant="h4" gutterBottom>Ticket Report</Typography>
@@ -222,13 +231,14 @@ export default function TicketReport() {
         onChange={handleSearch}
         sx={{ mb: 2, mt: 5 }}
       />
-      <Button variant="contained" color="error" onClick={clearStorage}>
-        DELETE ALL
-      </Button>
+
+
       <TicketTable
         filteredTickets={filteredTickets}
         handleStatusChange={handleStatusChange}
         handleTechChange={handleTechChange}
+        clearStorage={clearStorage}
+        deleteTicketById={deleteTicketById}
       />
       <TicketStats
         totalTickets={tickets.length}

@@ -1,102 +1,73 @@
 import React from "react";
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, LabelList, CartesianGrid
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+  LabelList,
+  CartesianGrid,
 } from "recharts";
-import { Typography, Box, Paper, useTheme } from "@mui/material";
 import PropTypes from "prop-types";
 
 const CustomTooltip = ({ active, payload }) => {
-  const theme = useTheme();
   if (active && payload && payload.length) {
     return (
-      <Paper
-        elevation={3}
-        sx={{
-          padding: 1.5,
-          borderRadius: 2,
-          backgroundColor: theme.palette.background.paper,
-          color: theme.palette.text.primary,
-        }}
-      >
-        <Typography variant="body2" fontWeight="bold">
-          {payload[0].payload.name}: {payload[0].value}
-        </Typography>
-      </Paper>
+      <div className="bg-white shadow-lg p-2 rounded-md text-gray-900 text-sm font-semibold">
+        {payload[0].payload.name}: {payload[0].value}
+      </div>
     );
   }
   return null;
 };
 
 const CategoryBarChart = ({ data }) => {
-  const theme = useTheme();
-
   if (!data || data.length === 0) {
     return (
-      <Box sx={{ textAlign: "center", mt: 2 }}>
-        <Typography variant="h6" color="text.secondary">
-          Category Analysis
-        </Typography>
-        <Typography variant="body1" color="text.disabled">
-          No data available
-        </Typography>
-      </Box>
+      <div className="text-center mt-4 text-gray-500 text-lg font-semibold">
+        No data available
+      </div>
     );
   }
 
   const sortedData = [...data].sort((a, b) => b.value - a.value);
 
   return (
-    <div className="mt-50">
-    <Box
-      sx={{
-        textAlign: "center",
-        p: 3,
-        backgroundColor: theme.palette.background.default,
-        borderRadius: 3,
-        boxShadow: theme.palette.mode === "dark" ? "0px 4px 12px rgba(255,255,255,0.1)" : "0px 4px 12px rgba(0,0,0,0.1)",
-        border: `1px solid ${theme.palette.divider}`,
-      }}
-    >
-      <Typography variant="h6" fontWeight="bold" fontSize={50} color="primary" sx={{ mb: 2, fontFamily: 'fo, sans-serif', fontWeight: 600 }}>
-        Sub-Category Analysis
-      </Typography>
+    <div className="mt-10 bg-white shadow-md rounded-xl p-6 border border-gray-200">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Sub-Category Analysis</h2>
       <ResponsiveContainer width="100%" height={Math.max(400, data.length * 35)}>
         <BarChart data={sortedData} layout="vertical" barCategoryGap={30}>
-          <CartesianGrid strokeDasharray="3 3" opacity={0.5} />
-          <XAxis type="number" stroke={theme.palette.text.secondary} />
+          <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+          <XAxis type="number" stroke="#555" />
           <YAxis
             dataKey="name"
             type="category"
-            width={200}
+            width={240}
             interval={0}
-            stroke="#000"
-            tick={{ fontSize: 19, fontWeight: 'bold'}}
+            stroke="#333"
+            tick={{ fontSize: 14, fontWeight: "bold" }}
             className="uppercase"
           />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(0, 0, 0, 0.05)" }} />
           <Legend />
           <Bar
             dataKey="value"
-            fill={theme.palette.mode === "dark" ? "url(#darkGradient)" : "url(#lightGradient)"}
-            barSize={25}
-            radius={[6, 6, 6, 6]}
+            fill="url(#gradient)"
+            barSize={30}
+            radius={[8, 8, 8, 8]}
           >
             <LabelList dataKey="value" position="insideLeft" fill="#fff" fontSize={14} fontWeight="bold" />
           </Bar>
-          {/* Gradient Definitions */}
           <defs>
-            <linearGradient id="lightGradient" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#36A2EB" />
-              <stop offset="100%" stopColor="#007BFF" />
-            </linearGradient>
-            <linearGradient id="darkGradient" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#FF6384" />
-              <stop offset="100%" stopColor="#FF416C" />
+            <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#2563EB" />
+              <stop offset="100%" stopColor="#1E40AF" />
             </linearGradient>
           </defs>
         </BarChart>
       </ResponsiveContainer>
-    </Box>
     </div>
   );
 };

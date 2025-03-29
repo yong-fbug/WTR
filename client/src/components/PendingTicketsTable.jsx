@@ -1,48 +1,51 @@
 import React from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 
 const PendingTicketsTable = ({ totalTickets, weekdayTickets, pendingTechData = [] }) => {
-  const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-
   return (
-    <TableContainer component={Paper} sx={{ maxHeight: 'none', overflow: "auto"}}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell><strong>Tech</strong></TableCell>
-            <TableCell><strong>Pending</strong></TableCell>
-            <TableCell><strong>Total Tickets</strong></TableCell>
-            <TableCell><strong>Monday</strong></TableCell>
-            <TableCell><strong>Tuesday</strong></TableCell>
-            <TableCell><strong>Wednesday</strong></TableCell>
-            <TableCell><strong>Thursday</strong></TableCell>
-            <TableCell><strong>Friday</strong></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {pendingTechData.length > 0 ? (
-            pendingTechData.map((entry, index) => (
-              <TableRow key={index}>
-                <TableCell>{entry.tech}</TableCell>
-                <TableCell>{entry.count}</TableCell>
-                <TableCell>{entry.totalTickets}</TableCell>
-                <TableCell>{entry.mondayTickets}</TableCell>
-                <TableCell>{entry.tuesdayTickets}</TableCell>
-                <TableCell>{entry.wednesdayTickets}</TableCell>
-                <TableCell>{entry.thursdayTickets}</TableCell>
-                <TableCell>{entry.fridayTickets}</TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={8} align="center">
-                No Tickets
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200 text-gray-900">
+      <h2 className="text-2xl font-semibold text-center mb-4 text-gray-800 font-mono">Tickets Overview</h2>
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse rounded-lg overflow-hidden">
+          <thead>
+            <tr className="bg-gray-200 text-gray-700 font-semibold text-left">
+              <th className="py-3 px-4">Tech</th>
+              <th className="py-3 px-4">Pending</th>
+              <th className="py-3 px-4">Total Tickets</th>
+              <th className="py-3 px-4">Monday</th>
+              <th className="py-3 px-4">Tuesday</th>
+              <th className="py-3 px-4">Wednesday</th>
+              <th className="py-3 px-4">Thursday</th>
+              <th className="py-3 px-4">Friday</th>
+            </tr>
+          </thead>
+          <tbody>
+            {pendingTechData.length > 0 ? (
+              pendingTechData.map((entry, index) => (
+                <tr
+                  key={index}
+                  className={
+                    index % 2 === 0 ? "bg-gray-100 hover:bg-gray-300" : "bg-white hover:bg-gray-200"
+                  }
+                >
+                  <td className="py-3 px-4 text-gray-700">{entry.tech}</td>
+                  <td className="py-3 px-4 text-gray-700">{entry.count}</td>
+                  <td className="py-3 px-4 text-gray-700">{entry.totalTickets}</td>
+                  <td className="py-3 px-4 text-gray-700">{entry.mondayTickets}</td>
+                  <td className="py-3 px-4 text-gray-700">{entry.tuesdayTickets}</td>
+                  <td className="py-3 px-4 text-gray-700">{entry.wednesdayTickets}</td>
+                  <td className="py-3 px-4 text-gray-700">{entry.thursdayTickets}</td>
+                  <td className="py-3 px-4 text-gray-700">{entry.fridayTickets}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={8} className="text-center text-gray-500 py-4">No Tickets Available</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 };
 

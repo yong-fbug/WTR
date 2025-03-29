@@ -16,8 +16,10 @@ import {
   Typography
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import DeleteAllButton from "./DeleteAllButton";
+import DeleteById from "./DeleteById";
 
-const TicketTable = ({ filteredTickets, handleStatusChange, handleTechChange }) => {
+const TicketTable = ({ filteredTickets, handleStatusChange, handleTechChange, clearStorage, deleteTicketById }) => {
   const [open, setOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState(null);
 
@@ -42,6 +44,7 @@ const TicketTable = ({ filteredTickets, handleStatusChange, handleTechChange }) 
     handleTechChange(selectedTicket.index, selectedTicket["Assigned Tech Support"]);
     handleClose();
   };
+  
 
   return (
     <div className="mb-250">
@@ -58,6 +61,8 @@ const TicketTable = ({ filteredTickets, handleStatusChange, handleTechChange }) 
               <TableCell><strong>Sub-Category</strong></TableCell>
               <TableCell sx={{ width: 180 }}><strong>Sub-Sub-Category</strong></TableCell>
               <TableCell><strong>Edit</strong></TableCell>
+              <TableCell><strong><DeleteAllButton clearStorage={clearStorage} />
+              </strong></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -75,6 +80,18 @@ const TicketTable = ({ filteredTickets, handleStatusChange, handleTechChange }) 
                   <Button variant="contained" onClick={() => handleOpen({ ...ticket, index })}>
                     Edit
                   </Button>
+                  
+                </TableCell>
+
+                <TableCell>
+                <DeleteById
+                  ticketNumber={ticket["Ticket Number"]}
+                  deleteTicketById={deleteTicketById}
+                  className="bg-red-500 text-white px-2 py-1 rounded border-"
+                >
+                  Delete
+                </DeleteById>
+
                 </TableCell>
               </TableRow>
             ))}
