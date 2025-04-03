@@ -38,7 +38,7 @@ const TicketStats = ({ totalTickets, ticketStatusData, ticketTechData, tickets }
   const resolvedTickets = ticketStatusData.find((t) => t.name === "Closed")?.value || 0;
 
   return (
-    <div className="flex flex-col items-center w-full p-6">
+    <div className="flex flex-col items-center w-full p-6 mt-150">
       {/* Current Date */}
       <h1 className="text-4xl font-bold text-gray-800 text-center mb-6">{currentDate}</h1>
 

@@ -10,7 +10,8 @@ import PendingTicketsTable from "../components/PendingTicketsTable";
 import CategoryChart from "../components/CategoryChart";
 import SubCategoryChart from "../components/SubCategoryChart";
 import SubSubCategoryChart from "../components/SubSubCategoryChart";
-  
+import EmailDomainRequestor from "../components/emailDomainReq";
+
 export default function TicketReport() {
   const [tickets, setTickets] = useState([]);
   const [filteredTickets, setFilteredTickets] = useState([]);
@@ -234,6 +235,8 @@ export default function TicketReport() {
         value={searchTerm}
         onChange={handleSearch}
       />
+
+      
   
       <TicketTable
         filteredTickets={filteredTickets}
@@ -242,6 +245,9 @@ export default function TicketReport() {
         clearStorage={clearStorage}
         deleteTicketById={deleteTicketById}
       />
+      <div>
+       <EmailDomainRequestor tickets={tickets} />
+      </div>
       <TicketStats
         totalTickets={tickets.length}
         ticketStatusData={ticketStatusData}
