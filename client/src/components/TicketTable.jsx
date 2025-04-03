@@ -105,7 +105,7 @@ const TicketTable = ({
                   <Edit className="w-4 h-4"/>
                 </button>
               </td>
-              <td className="flex justify-center p-2 mt-3 select-none">
+              <td className="flex justify-center p-3 mt-5 select-none items-center">
                 <DeleteById
                   ticketNumber={ticket["Ticket Number"]}
                   deleteTicketById={deleteTicketById}

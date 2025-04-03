@@ -245,15 +245,15 @@ export default function TicketReport() {
         clearStorage={clearStorage}
         deleteTicketById={deleteTicketById}
       />
-      <div>
-       <EmailDomainRequestor tickets={tickets} />
-      </div>
       <TicketStats
         totalTickets={tickets.length}
         ticketStatusData={ticketStatusData}
         ticketTechData={ticketTechData}
         tickets={tickets}
       />
+      <div>
+       <EmailDomainRequestor tickets={tickets} />
+      </div>
       <TicketCharts
         amPmChartData={amPmChartData}
         ticketStatusData={ticketStatusData}

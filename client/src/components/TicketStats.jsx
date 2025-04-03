@@ -49,7 +49,7 @@ const TicketStats = ({ totalTickets, ticketStatusData, ticketTechData, tickets }
       </div>
 
       {/* Weekday Tickets Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 w-full max-w-5xl mt-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 w-full max-w-5xl my-6">
         {daysOfWeek.map((day) => {
           const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
           const isToday = today === day;
